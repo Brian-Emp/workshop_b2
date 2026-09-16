@@ -28,8 +28,7 @@ def verifier_nfc():
     if id == 481729585450:
         label_status.config(text="Badge détecté : M. Pickle Rick", fg=couleur_rick)
         fenetre.update()  
-
-        chemin_video = "/home/bob/nfc-env/Animation_720p_Pickle_Rick.mov"
+        chemin_video = "/home/bob/nfc-env/workshop_b2/Animation_720p_Pickle_Rick.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
         fenetre.after(1000, verifier_nfc)
 
@@ -38,7 +37,7 @@ def verifier_nfc():
     elif id == 145033995888:
         label_status.config(text="Badge détecté : M. Larbin", fg=couleur_rick)
         fenetre.update()  
-        chemin_video = "/home/bob/nfc-env/M.Larbin_720p_animation.mov"
+        chemin_video = "/home/bob/nfc-env/workshop_b2/M.Larbin_720p_animation.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
         fenetre.after(1000, verifier_nfc)
 
@@ -54,7 +53,7 @@ def verifier_nfc():
 
 def reset_interface():
     label_status.config(text="Présente un autre pass", fg=couleur_portail)
-    fenetre.after(200, verifier_nfc)
+    fenetre.after(300, verifier_nfc)
 
 
 btn_quit = tk.Button(fenetre, text="Fermer la dimension", command=fenetre.destroy, 
