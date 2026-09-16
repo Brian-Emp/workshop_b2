@@ -26,14 +26,14 @@ def verifier_nfc():
     id, text = reader.read_no_block()
     
     if id == 481729585450:
-        print ("Badge détecté : M. Larbin")
+        label_status.config(text="Badge détecté : M. Pickle Rick", fg=couleur_rick)
 
         chemin_video = "/home/bob/nfc-env/Animation_720p_Pickle_Rick.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
         fenetre.after(1000, verifier_nfc)
         
     elif id == 145033995888:
-        print ("Badge détecté : M. Pickle Rick")
+        label_status.config(text="Badge détecté : M. Larbin", fg=couleur_rick)
 
         chemin_video = "/home/bob/nfc-env/M.Larbin_720p_animation.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
