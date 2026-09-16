@@ -44,7 +44,7 @@ def verifier_nfc():
         reset_interface()
 
     elif id:
-        label_status.config(text="Badge inconnu, réessaye avec un autre badge ou configure en un nouveau !", fg="red")
+        label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
         fenetre.after(2000, reset_interface)
         
@@ -52,8 +52,8 @@ def verifier_nfc():
         fenetre.after(200, verifier_nfc)
 
 def reset_interface():
-    label_status.config(text="Présente un autre pass", fg=couleur_portail)
-    fenetre.after(300, verifier_nfc)
+    label_status.config(text="Présente un autre badge", fg=couleur_portail)
+    fenetre.after(200, verifier_nfc)
 
 
 btn_quit = tk.Button(fenetre, text="Fermer la dimension", command=fenetre.destroy, 
