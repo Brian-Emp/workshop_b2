@@ -27,21 +27,27 @@ def verifier_nfc():
     
     if id == 481729585450:
         label_status.config(text="Badge détecté : M. Pickle Rick", fg=couleur_rick)
+        fenetre.update()  
 
         chemin_video = "/home/bob/nfc-env/Animation_720p_Pickle_Rick.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
         fenetre.after(1000, verifier_nfc)
+
+        reset_interface()
         
     elif id == 145033995888:
         label_status.config(text="Badge détecté : M. Larbin", fg=couleur_rick)
-
+        fenetre.update()  
         chemin_video = "/home/bob/nfc-env/M.Larbin_720p_animation.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
         fenetre.after(1000, verifier_nfc)
 
+        reset_interface()
+
     elif id:
-        print(f"Badge inconnu détecté : {id}")
-        fenetre.after(2000, verifier_nfc)
+        label_status.config(text="Badge inconnu, réessaye avec un autre badge ou configure en un nouveau !", fg="red")
+        fenetre.update()
+        fenetre.after(2000, reset_interface)
         
     else:
         fenetre.after(200, verifier_nfc)
