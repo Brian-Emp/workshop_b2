@@ -56,22 +56,21 @@ def verifier_nfc():
         arduino.write(b"CLOSE\n")   
         fenetre.after(6000, verifier_nfc)
 
-    elif id == int:
-        
-        label_status.config(text=text, fg="red")
-        fenetre.update()
-        fenetre.after(2000, reset_interface)
-    elif id == None:
+
+    elif id is not None:
+        if arduino:
+            arduino.write(b"OPEN\n")
         label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
-        fenetre.after(2000, reset_interface)
+        arduino.write(b"CLOSE\n") 
+        fenetre.after(6000, reset_interface)
         
     else:
-        fenetre.after(200, verifier_nfc)
+        fenetre.after(6000, verifier_nfc)
 
 def reset_interface():
     label_status.config(text="Présente un autre badge", fg=couleur_portail)
-    fenetre.after(200, verifier_nfc)
+    fenetre.after(4000, verifier_nfc)
 
 
 btn_quit = tk.Button(fenetre, text="Fermer la dimension", command=fenetre.destroy, 
