@@ -22,6 +22,16 @@ label_status = tk.Label(fenetre, text="Bienvenu !\nPour rechercher une personne,
 font=("Helvetica", 28, "bold"), fg=couleur_portail, bg=couleur_fond)
 label_status.pack(expand=True)
 
+def lancer_vidéo_Larbin():
+    chemin_video = "/home/bob/nfc-env/workshop_b2/Animation_720p_Pickle_Rick.mov"
+    subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+    reset_interface()
+
+def lancer_vidéo_Pickle_Rick():
+    chemin_video = "/home/bob/nfc-env/workshop_b2/M.Larbin_720p_animation.mov"
+    subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+    reset_interface()
+
 def verifier_nfc():
     id, text = reader.read_no_block()
     
@@ -29,29 +39,29 @@ def verifier_nfc():
         if arduino:
             arduino.write(b"OPEN\n")
 
-        label_status.config(text="Badge détecté : M. Pickle Rick", fg=couleur_rick)
+        label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
         fenetre.update()  
-
-        chemin_video = "/home/bob/nfc-env/workshop_b2/Animation_720p_Pickle_Rick.mov"
-        subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+        lancer_vidéo_Larbin()
+       
         arduino.write(b"CLOSE\n")   
-        fenetre.after(1000, verifier_nfc)
+        fenetre.after(6000, verifier_nfc)
 
-        reset_interface()
-        
     elif id == 145033995888:
         if arduino:
             arduino.write(b"OPEN\n")
-        label_status.config(text="Badge détecté : M. Larbin", fg=couleur_rick)
+
+        label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
         fenetre.update()  
-        chemin_video = "/home/bob/nfc-env/workshop_b2/M.Larbin_720p_animation.mov"
-        subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+        lancer_vidéo_Pickle_Rick()
         arduino.write(b"CLOSE\n")   
-        fenetre.after(1000, verifier_nfc)
+        fenetre.after(6000, verifier_nfc)
 
-        reset_interface()
-
-    elif id:
+    elif id == int:
+        
+        label_status.config(text=text, fg="red")
+        fenetre.update()
+        fenetre.after(2000, reset_interface)
+    elif id == None:
         label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
         fenetre.after(2000, reset_interface)
