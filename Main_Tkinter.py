@@ -2,7 +2,7 @@ import tkinter as tk
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import subprocess
-
+import serial 
 
 reader = SimpleMFRC522()
 
@@ -26,19 +26,27 @@ def verifier_nfc():
     id, text = reader.read_no_block()
     
     if id == 481729585450:
+        if arduino:
+            arduino.write(b"OPEN\n")
+
         label_status.config(text="Badge détecté : M. Pickle Rick", fg=couleur_rick)
         fenetre.update()  
+
         chemin_video = "/home/bob/nfc-env/workshop_b2/Animation_720p_Pickle_Rick.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+        arduino.write(b"CLOSE\n")   
         fenetre.after(1000, verifier_nfc)
 
         reset_interface()
         
     elif id == 145033995888:
+        if arduino:
+            arduino.write(b"OPEN\n")
         label_status.config(text="Badge détecté : M. Larbin", fg=couleur_rick)
         fenetre.update()  
         chemin_video = "/home/bob/nfc-env/workshop_b2/M.Larbin_720p_animation.mov"
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit", "--no-video-title-show", chemin_video])
+        arduino.write(b"CLOSE\n")   
         fenetre.after(1000, verifier_nfc)
 
         reset_interface()
