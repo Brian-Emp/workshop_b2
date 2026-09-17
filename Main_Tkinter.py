@@ -6,6 +6,13 @@ import serial
 
 reader = SimpleMFRC522()
 
+try:
+    # C'est cette ligne qui ouvre physiquement le port USB
+    arduino = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+except serial.SerialException:
+    print("Attention : Arduino non connecté ou port incorrect")
+    arduino = None
+
 fenetre = tk.Tk()
 fenetre.title("Portail Rick & Morty")
 fenetre.attributes('-fullscreen', True) 
