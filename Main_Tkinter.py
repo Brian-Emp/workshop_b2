@@ -46,38 +46,42 @@ def verifier_nfc():
         if arduino:
             arduino.write(b"OPEN\n")
         else:
-            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
-        label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
+            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre OPEN annulé !")
+            
+        label_status.config(text="Badge détecté : " + str(text), fg=couleur_rick)
         fenetre.update()  
         lancer_vidéo_Larbin()
        
-        arduino.write(b"CLOSE\n")   
-        fenetre.after(3000, verifier_nfc)
+        # La fermeture doit aussi être protégée !
+        if arduino:
+            arduino.write(b"CLOSE\n")   
+        # On peut relancer la vérification tout de suite car la vidéo met le code en pause
+        fenetre.after(200, verifier_nfc)
 
-    elif id == 145033995888:
+    elif id == 14503399588: # Le '8' en trop est supprimé
         if arduino:
             arduino.write(b"OPEN\n")
         else:
-            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
-        label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
+            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre OPEN annulé !")
+            
+        label_status.config(text="Badge détecté : " + str(text), fg=couleur_rick)
         fenetre.update()  
         lancer_vidéo_Pickle_Rick()
-        arduino.write(b"CLOSE\n")   
-        fenetre.after(3000, verifier_nfc)
-
+        
+        if arduino:
+            arduino.write(b"CLOSE\n")   
+        fenetre.after(200, verifier_nfc)
 
     elif id is not None:
-        if arduino:
-            arduino.write(b"OPEN\n")
-        else:
-            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
+        # Faille de sécurité corrigée : on n'envoie PLUS l'ordre OPEN ici
         label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
-        arduino.write(b"CLOSE\n") 
+        # On laisse le message 3 secondes avant de réinitialiser l'interface
         fenetre.after(3000, reset_interface)
         
     else:
-        fenetre.after(3000, verifier_nfc)
+        # Le lecteur est vide, on revérifie très vite (200ms) pour une bonne réactivité
+        fenetre.after(200, verifier_nfc)
 
 def reset_interface():
     label_status.config(text="Présente un autre badge", fg=couleur_portail)
