@@ -47,17 +47,21 @@ DOSSIER = "/home/bob/nfc-env/workshop_b2/"
 
 # UID -> (nom affiche, fichier video)
 BADGES = {
-    481729585450: ("M. Pickle Rick", "Animation_720p_Pickle_Rick.mov"),
-    145033995888: ("M. Larbin",      "M_Larbin_720p_animation.mov"),
+    1081687635404: ("M. Pickle Rick", "Animation_720p_Pickle_Rick.mov"),
+    49538561101: ("M. Larbin",      "Animation_720p_M_Larbin.mov"),
+    51264386313: ("Rick et Morty", "Animation_720p_Rick_et_Morty.mov"),
+    119881430522: ("Robot beurre", "Animation_720p_Robot_Beurre.mov"),
+    323427398836: ("Jerry", "Animation_720p_Jerry.mov")
 }
 
 
 def jouer_sequence(nom, video):
     ouvrir()
-    sleep(2)  
+    time.sleep(2)  
     label_status.config(text=f"Badge détecté : {nom}", fg=couleur_rick)
+    time.sleep(2)
     fenetre.update()
-    
+
     try:
         subprocess.run(["cvlc", "--fullscreen", "--play-and-exit",
                         "--no-video-title-show", DOSSIER + video])

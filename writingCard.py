@@ -11,10 +11,16 @@ try:
     print(f"Badge détecté, ID : {uid}")
     
 
-    if uid == 481729585450:
+    if uid == 49538561101:
         data_to_write = "M. Larbin"
-    elif uid == 145033995888: 
-        data_to_write = "M. Pickle Rick"
+    elif uid == 51264386313: 
+        data_to_write = "Rick et Morty"
+    elif uid == 1081687635404: 
+            data_to_write = "M. Pickle Rick"
+    elif uid == 119881430522: 
+            data_to_write = "Robot beurre"
+    elif uid == 323427398836: 
+            data_to_write = "Jerry"
     else:
         data_to_write = input("Entrez le nom du propriétaire pour le badge : ")
         
