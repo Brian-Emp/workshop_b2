@@ -46,29 +46,33 @@ label_status.pack(expand=True)
 DOSSIER = "/home/bob/nfc-env/workshop_b2/"
 
 # UID -> (nom affiche, fichier video)
+# Mettez les NOMS EXACTS tels qu'ils sont écrits dans votre dossier (attention aux majuscules)
 BADGES = {
     1081687635404: ("M. Pickle Rick", "Animation_720p_Pickle_Rick.mov"),
-    49538561101: ("M. Larbin",      "Animation_720p_M_Larbin.mov"),
-    51264386313: ("Rick et Morty", "Animation_720p_Rick_et_Morty.mov"),
+    49538561101: ("M. Larbin",      "Animation_720p_Monsieur_Larbin.mov"), # À vérifier
+    51264386313: ("Rick et Morty", "Animation_720p_Rick_Morty.mov"), # Corrigé
     119881430522: ("Robot beurre", "Animation_720p_Robot_Beurre.mov"),
     323427398836: ("Jerry", "Animation_720p_Jerry.mov")
 }
 
-
 def jouer_sequence(nom, video):
-    ouvrir()
-    time.sleep(2)  
-    label_status.config(text=f"Badge détecté : {nom}", fg=couleur_rick)
-    time.sleep(2)
-    fenetre.update()
+    ouvrir() 
+    
+    # On met à jour l'interface immédiatement
+    label_status.config(text=f"Badge détecté : {nom}\nOuverture en cours...", fg=couleur_rick)
+    
+    # Fonction locale qui sera déclenchée après l'attente
+    def lancer_vlc():
+        try:
+            subprocess.run(["cvlc", "--fullscreen", "--play-and-exit",
+                            "--no-video-title-show", DOSSIER + video])
+        finally:
+            fermer()           
+        reset_interface()
 
-    try:
-        subprocess.run(["cvlc", "--fullscreen", "--play-and-exit",
-                        "--no-video-title-show", DOSSIER + video])
-    finally:
-        fermer()           # ferme meme si la video plante
 
-    reset_interface()
+    # Tkinter attend 2000 millisecondes (2 secondes) sans figer, puis lance VLC
+    fenetre.after(2000, lancer_vlc)
 
 
 def verifier_nfc():
