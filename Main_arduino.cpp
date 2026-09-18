@@ -1,49 +1,95 @@
 #include <Servo.h>
+
+// ---------- Paramètres à ajuster ----------
+const int SERVO_PIN_1 = 9;
+const int SERVO_PIN_2 = 10;
+
+const int ANGLE_OUVERT = 10;
+const int ANGLE_FERME  = 170;
+
+const int VITESSE = 20;                        // ms entre chaque degré
+const unsigned long DUREE_OUVERTURE = 8000;    // ms porte ouverte
+// ------------------------------------------
+
 Servo s1;
 Servo s2;
 
-const int servo_pin = 9;
-const int servo_pin2 = 10;
-int angle_ouvert = 180;
-int angle_ferme = 0;
+int angleActuel = ANGLE_FERME;
+bool porteOuverte = false;
+unsigned long instantOuverture = 0;
+
+String ligne = "";
+
+// Déplacement progressif, bloquant mais court (~3 s max)
+void bouger(int arrivee) {
+  int pas = (arrivee > angleActuel) ? 1 : -1;
+  while (angleActuel != arrivee) {
+    angleActuel += pas;
+    s1.write(angleActuel);
+    s2.write(180 - angleActuel);
+    delay(VITESSE);
+  }
+}
 
 void ouvrir() {
-  s1.write(angle_ouvert);
-  s2.write(180 - angle_ouvert);
+  bouger(ANGLE_OUVERT);
+  porteOuverte = true;
+  instantOuverture = millis();
+  Serial.println("OK OPEN");
 }
 
 void fermer() {
-  s1.write(angle_ferme);
-  s2.write(180 - angle_ferme);
-}
-
-void setup() {
-  s1.attach(servo_pin);
-  s2.attach(servo_pin2);
-
-  fermer(); 
-}
-
-void ouverture_controler(int depart, int arrive, int vitesse) {
-  int pas = arrive > depart ? 1 : -1;
-  for (int a = depart; a != arrive; a += pas) {
-    s1.write(a);
-    s2.write(180 - a);
-    delay(vitesse);
-  }
-  s1.write(arrive);
-  s2.write(180 - arrive);
-}
-
-//exemple test
-void loop() {
-  ouverture_controler(0, 120, 20);
-  delay(5000);
-  ouverture_controler(120, 0, 20);
+  bouger(ANGLE_FERME);
+  porteOuverte = false;
+  Serial.println("OK CLOSE");
 }
 
 void traiterCommande(const String &cmd) {
-  if (cmd == "OPEN")            ouvrir();
-  else if (cmd == "CLOSE")      fermer();
-  else                          Serial.println("ERR");
+  if (cmd == "OPEN") {
+    if (porteOuverte) {
+      instantOuverture = millis();   // badge repassé : on prolonge
+      Serial.println("OK OPEN");
+    } else {
+      ouvrir();
+    }
+  }
+  else if (cmd == "CLOSE") fermer();
+  else if (cmd == "PING")  Serial.println("PONG");
+  else                     Serial.println("ERR");
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  s1.attach(SERVO_PIN_1);
+  s2.attach(SERVO_PIN_2);
+
+  // état connu au démarrage, sans animation
+  angleActuel = ANGLE_FERME;
+  s1.write(ANGLE_FERME);
+  s2.write(180 - ANGLE_FERME);
+  porteOuverte = false;
+
+  Serial.println("READY");
+}
+
+void loop() {
+  // 1) Lecture non bloquante du port série
+  while (Serial.available()) {
+    char c = Serial.read();
+    if (c == '\n' || c == '\r') {
+      ligne.trim();
+      if (ligne.length() > 0) {
+        traiterCommande(ligne);
+        ligne = "";
+      }
+    } else if (ligne.length() < 32) {
+      ligne += c;
+    }
+  }
+
+  // 2) Refermeture automatique
+  if (porteOuverte && millis() - instantOuverture >= DUREE_OUVERTURE) {
+    fermer();
+  }
 }

@@ -52,7 +52,7 @@ def verifier_nfc():
         lancer_vidéo_Larbin()
        
         arduino.write(b"CLOSE\n")   
-        fenetre.after(6000, verifier_nfc)
+        fenetre.after(3000, verifier_nfc)
 
     elif id == 145033995888:
         if arduino:
@@ -63,7 +63,7 @@ def verifier_nfc():
         fenetre.update()  
         lancer_vidéo_Pickle_Rick()
         arduino.write(b"CLOSE\n")   
-        fenetre.after(6000, verifier_nfc)
+        fenetre.after(3000, verifier_nfc)
 
 
     elif id is not None:
@@ -74,14 +74,14 @@ def verifier_nfc():
         label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
         arduino.write(b"CLOSE\n") 
-        fenetre.after(6000, reset_interface)
+        fenetre.after(3000, reset_interface)
         
     else:
-        fenetre.after(6000, verifier_nfc)
+        fenetre.after(3000, verifier_nfc)
 
 def reset_interface():
     label_status.config(text="Présente un autre badge", fg=couleur_portail)
-    fenetre.after(4000, verifier_nfc)
+    fenetre.after(1000, verifier_nfc)
 
 
 btn_quit = tk.Button(fenetre, text="Fermer la dimension", command=fenetre.destroy, 
