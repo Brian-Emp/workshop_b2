@@ -45,7 +45,8 @@ def verifier_nfc():
     if id == 481729585450:
         if arduino:
             arduino.write(b"OPEN\n")
-
+        else:
+            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
         label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
         fenetre.update()  
         lancer_vidéo_Larbin()
@@ -56,7 +57,8 @@ def verifier_nfc():
     elif id == 145033995888:
         if arduino:
             arduino.write(b"OPEN\n")
-
+        else:
+            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
         label_status.config(text="Badge détecté : " + text, fg=couleur_rick)
         fenetre.update()  
         lancer_vidéo_Pickle_Rick()
@@ -67,6 +69,8 @@ def verifier_nfc():
     elif id is not None:
         if arduino:
             arduino.write(b"OPEN\n")
+        else:
+            print("---> ÉCHEC : L'Arduino n'est pas connecté, ordre annulé !")
         label_status.config(text="Badge inconnu, \nréessaye avec un autre badge \nou configure en un nouveau !", fg="red")
         fenetre.update()
         arduino.write(b"CLOSE\n") 

@@ -45,6 +45,5 @@ void loop() {
 void traiterCommande(const String &cmd) {
   if (cmd == "OPEN")            ouvrir();
   else if (cmd == "CLOSE")      fermer();
-  else if (cmd == "PING")       Serial.println("PONG");
   else                          Serial.println("ERR");
 }
